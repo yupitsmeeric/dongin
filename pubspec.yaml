@@ -30,10 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_inappwebview:
-    git:
-      url: https://github.com/arianneorpilla/flutter_inappwebview
-      ref: ffd182431017ec919ece3f80bf5e22a9286189af
+  flutter_inappwebview: ^6.1.5
   local_assets_server: ^2.0.2+12
 
   # The following adds the Cupertino Icons font to your application.
@@ -92,8 +89,8 @@ flutter:
           weight: 700
     - family: NotoSansKR
       fonts:
-        - asset: assets/fonts/NotoSansKR-Regular.otf
-        - asset: assets/fonts/NotoSansKR-Bold.otf
+        - asset: assets/fonts/NotoSansKR-Regular.ttf
+        - asset: assets/fonts/NotoSansKR-Bold.ttf
           weight: 700
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
