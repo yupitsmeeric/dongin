@@ -128,18 +128,18 @@ Future<void> setInitialSettings(InAppWebViewController controller) async {
 String javascriptToExecute = """
 skipMarks = [" ", ".", ","];
 
-function tapToSelect(e) {
+function getTappedWord(e) {
   // console.log("Tap detected!!");
+
+  let range;
+  let textNode;
+  let offset;
 
   const selectionText = document.getSelection().toString();
 
-  if (selectionText) {
-    console.log(selectionText);
-    return;
-  }
-
   if (document.caretPositionFromPoint) {
     range = document.caretPositionFromPoint(e.clientX, e.clientY);
+    // range = document.caretPositionFromPoint(x, y);
     textNode = range.offsetNode;
     offset = range.offset;
   } else { return; }
@@ -159,8 +159,6 @@ function tapToSelect(e) {
     end++;
   }
 
-  // console.log(start, end);
-
   newRange.setStart(textNode, start);
   newRange.setEnd(textNode, end);
   console.log(textNode.data.slice(start, end));
@@ -171,9 +169,23 @@ function tapToSelect(e) {
   selection.addRange(newRange);
 }
 
+function getSelectedText() {
+  return document.getSelection().toString().trim();
+}
+
+function onSelectionChange(){
+  setTimeout(()=>{
+    const text = getSelectedText();
+    if (text) {
+        console.log(text);
+    }
+  }, 0)
+}
 
 var reader = document.getElementsByClassName('book-content');
 if (reader.length != 0) {
-  reader[0].addEventListener('click', tapToSelect, true);
+  reader[0].addEventListener('click',getTappedWord, true);
+  document.addEventListener('selectionchange', onSelectionChange, true);
 }
+
 """;
