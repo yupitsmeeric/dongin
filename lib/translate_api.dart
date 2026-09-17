@@ -1,0 +1,58 @@
+import 'dart:convert';
+
+import 'package:lru_cache/lru_cache.dart';
+
+import 'package:http/http.dart' as http;
+
+class TranslateApi {
+  final http.Client _client;
+  final _cache = LruCache<String, String>(256);
+
+  void close() {
+    _client.close();
+  }
+
+  TranslateApi({http.Client? client}) : _client = client ?? http.Client();
+
+  Future<String> translate(String text) async {
+    // check cache first
+    final cachedTranslation = await _cache.get(text);
+    if (cachedTranslation != null) {
+      // print("returning cached translation for $text");
+      // print(_cache.snapshot());
+      return cachedTranslation;
+    }
+
+    final uri = Uri.parse(
+      'https://translate-pa.googleapis.com/v1/translateHtml',
+    );
+    final body = [
+      [
+        [text],
+        "ko",
+        "en",
+      ],
+      "wt_lib",
+    ];
+    final response = await _client.post(
+      uri,
+      headers: {
+        "Accept": "*/*",
+        "Content-Type": "application/json+protobuf",
+        "X-Goog-API-Key": "AIzaSyATBXajvzQLTDHEQbcpq0Ihe0vWDHmO520",
+      },
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      return "failed to translate";
+    }
+
+    final decoded = jsonDecode(response.body);
+    final String translation = decoded[0][0];
+    _cache.put(text, translation);
+    return translation;
+
+    // return  as String;
+  }
+}
