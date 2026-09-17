@@ -38,8 +38,11 @@ dependencies:
   cupertino_icons: ^1.0.8
   http: ^1.6.0
   lru_cache: ^0.0.3
+  auto_size_text: ^3.0.0
+  html_unescape: ^2.0.0
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.3
   flutter_test:
     sdk: flutter
 
@@ -119,3 +122,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+flutter_launcher_icons:
+  android: true
+  # adaptive_icon_foreground_inset: 0
+  ios: false
+  image_path: "assets/icons/icon.jpg"
+

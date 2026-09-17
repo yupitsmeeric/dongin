@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:lru_cache/lru_cache.dart';
-
+import 'package:html_unescape/html_unescape.dart';
 import 'package:http/http.dart' as http;
 
 class TranslateApi {
   final http.Client _client;
   final _cache = LruCache<String, String>(256);
+  final unescape = HtmlUnescape();
 
   void close() {
     _client.close();
@@ -15,6 +16,10 @@ class TranslateApi {
   TranslateApi({http.Client? client}) : _client = client ?? http.Client();
 
   Future<String> translate(String text) async {
+    // trim the string to 100 chars
+    if (text.length > 100) {
+      text = text.substring(0, 100);
+    }
     // check cache first
     final cachedTranslation = await _cache.get(text);
     if (cachedTranslation != null) {
@@ -50,8 +55,11 @@ class TranslateApi {
 
     final decoded = jsonDecode(response.body);
     final String translation = decoded[0][0];
-    _cache.put(text, translation);
-    return translation;
+
+    // html unescape
+    final cleanTranslation = unescape.convert(translation);
+    _cache.put(text, cleanTranslation);
+    return cleanTranslation;
 
     // return  as String;
   }

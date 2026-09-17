@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:local_assets_server/local_assets_server.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dongin/translate_api.dart';
 
 const PORT = 8001;
@@ -62,6 +63,7 @@ class _MyAppState extends State<MyApp> {
         child: Column(
           children: <Widget>[
             Expanded(
+              flex: 15,
               child: InAppWebView(
                 initialUrlRequest: URLRequest(
                   url: WebUri("http://localhost:$PORT/manage.html"),
@@ -80,7 +82,16 @@ class _MyAppState extends State<MyApp> {
                 onConsoleMessage: onConsoleMessage,
               ),
             ),
-            Text(_message, style: const TextStyle(fontSize: 22)),
+            Expanded(
+              flex: 1,
+              child: Center(
+                child: AutoSizeText(
+                  _message,
+                  style: const TextStyle(fontSize: 22),
+                  maxLines: 2,
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -107,12 +118,6 @@ class _MyAppState extends State<MyApp> {
       _message = translated;
     });
   }
-}
-
-Future<String> translateText(String text) async {
-  // given a korean string, translate it and return
-  // TODO
-  return "";
 }
 
 Future<void> setInitialSettings(InAppWebViewController controller) async {
