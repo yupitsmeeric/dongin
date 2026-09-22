@@ -131,7 +131,10 @@ Future<void> setInitialSettings(InAppWebViewController controller) async {
 }
 
 String javascriptToExecute = """
-skipMarks = [" ", ".", ","];
+
+function isPunctuation(c){
+  return "/\p{P}|\s/gu".test(c);
+}
 
 function getTappedWord(e) {
   // console.log("Tap detected!!");
@@ -154,13 +157,13 @@ function getTappedWord(e) {
   let newRange = document.createRange();
   let start = offset;
   // if user clicks a space, select the word after
-  if (skipMarks.includes(textNode.data[start])) { start++; }
+  if (isPunctuation(textNode.data[start])) { start++; }
   let end = offset;
-  while (start >= 0 && !skipMarks.includes(textNode.data[start])) {
+  while (start >= 0 && !isPunctuation(textNode.data[start])) {
     start--;
   }
   if (start != 0) { start++; }
-  while (end < textNode.data.length && !skipMarks.includes(textNode.data[end])) {
+  while (end < textNode.data.length && !isPunctuation(textNode.data[end])) {
     end++;
   }
 
@@ -192,5 +195,6 @@ if (reader.length != 0) {
   reader[0].addEventListener('click',getTappedWord, true);
   document.addEventListener('selectionchange', onSelectionChange, true);
 }
+
 
 """;
