@@ -130,10 +130,10 @@ Future<void> setInitialSettings(InAppWebViewController controller) async {
   await controller.evaluateJavascript(source: javascriptToExecute);
 }
 
-String javascriptToExecute = """
+String javascriptToExecute = r'''
 
 function isPunctuation(c){
-  return "/\p{P}|\s/gu".test(c);
+  return /\p{P}|\s/u.test(c);
 }
 
 function getTappedWord(e) {
@@ -196,5 +196,16 @@ if (reader.length != 0) {
   document.addEventListener('selectionchange', onSelectionChange, true);
 }
 
-
-""";
+// inject selection style
+var style = document.createElement("style");
+style.textContent = `
+    ::selection {
+      color: orange;
+      background-color: transparent;
+    }
+    body {
+  font-family: "Noto Serif KR", "Noto Serif CJK KR", serif;
+}
+`;
+document.head.append(style);
+''';
