@@ -1,11 +1,14 @@
 import 'dart:convert';
 
+// import 'package:flutter/widgets.dart';
 import 'package:lru_cache/lru_cache.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:http/http.dart' as http;
 
 class TranslateApi {
   final http.Client _client;
+  String _sLang = "ko";
+  String _tLang = "en";
   final _cache = LruCache<String, String>(256);
   final unescape = HtmlUnescape();
 
@@ -13,7 +16,26 @@ class TranslateApi {
     _client.close();
   }
 
-  TranslateApi({http.Client? client}) : _client = client ?? http.Client();
+  TranslateApi({http.Client? client, sLang = "ko", tLang = "en"})
+    : _client = client ?? http.Client(),
+      _sLang = sLang,
+      _tLang = tLang;
+
+  get sLang => _sLang;
+  set sLang(String value) {
+    if (_sLang == value) return;
+
+    _sLang = value;
+    _cache.evictAll();
+  }
+
+  get tLang => _tLang;
+  set tLang(String value) {
+    if (_tLang == value) return;
+
+    _tLang = value;
+    _cache.evictAll();
+  }
 
   Future<String> translate(String text) async {
     // trim the string to 100 chars
@@ -34,8 +56,8 @@ class TranslateApi {
     final body = [
       [
         [text],
-        "ko",
-        "en",
+        sLang,
+        tLang,
       ],
       "wt_lib",
     ];

@@ -2,11 +2,12 @@
 // find a way to hook up the translation api object or inject it in the build
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:dongin/translate_api.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:local_assets_server/local_assets_server.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:provider/provider.dart';
 
 const PORT = 8001;
 
@@ -22,7 +23,7 @@ class _Reader extends State<Reader> {
   int? port;
   // late InAppWebViewController _controller;
   String _message = "";
-  TranslateApi api = TranslateApi();
+  late TranslateApi api;
 
   @override
   void initState() {
@@ -88,6 +89,8 @@ class _Reader extends State<Reader> {
 
   @override
   Widget build(BuildContext context) {
+    api = context.read<TranslateApi>();
+
     return SafeArea(
       child: Column(
         children: <Widget>[

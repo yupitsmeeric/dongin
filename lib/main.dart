@@ -1,9 +1,19 @@
-import 'package:flutter/material.dart';
+import 'package:dongin/translate_api.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:dongin/reader.dart';
+import 'package:dongin/settings.dart';
+import 'package:provider/provider.dart';
 
+// TODO: add a quick TL switch in the app bar
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: MyApp()));
+  runApp(
+    Provider<TranslateApi>(
+      create: (_) => TranslateApi(),
+      builder: (context, child) =>
+          MaterialApp(debugShowCheckedModeBanner: false, home: MyApp()),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -21,9 +31,21 @@ class _MyAppState extends State<MyApp> {
       drawer: Drawer(
         child: ListView(
           children: [
-            const DrawerHeader(child: Text("Dongin Reader")),
-            ListTile(title: const Text("Reader")),
-            ListTile(title: const Text("Settings")),
+            const DrawerHeader(
+              child: Text("Dongin Reader", textScaler: TextScaler.linear(2.0)),
+            ),
+            ListTile(
+              leading: const Icon(Icons.menu_book_sharp),
+              title: const Text("Home"),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text("Settings"),
+              onTap: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => const Settings())),
+            ),
           ],
         ),
       ),
