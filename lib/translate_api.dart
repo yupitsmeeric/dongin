@@ -3,12 +3,18 @@ import 'dart:convert';
 // import 'package:flutter/widgets.dart';
 import 'package:lru_cache/lru_cache.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+// TODO: add sharedprefs
+
 class TranslateApi {
+  late final SharedPreferences prefs;
   final http.Client _client;
   String _sLang = "ko";
   String _tLang = "en";
+  String _tLangAlt = "ja";
+  int _tLangIdx = 0;
   final _cache = LruCache<String, String>(256);
   final unescape = HtmlUnescape();
 
@@ -16,12 +22,9 @@ class TranslateApi {
     _client.close();
   }
 
-  TranslateApi({http.Client? client, sLang = "ko", tLang = "en"})
-    : _client = client ?? http.Client(),
-      _sLang = sLang,
-      _tLang = tLang;
+  TranslateApi({http.Client? client}) : _client = client ?? http.Client();
 
-  get sLang => _sLang;
+  String get sLang => _sLang;
   set sLang(String value) {
     if (_sLang == value) return;
 
@@ -29,11 +32,26 @@ class TranslateApi {
     _cache.evictAll();
   }
 
-  get tLang => _tLang;
+  String get tLang => _tLang;
   set tLang(String value) {
     if (_tLang == value) return;
-
     _tLang = value;
+    _cache.evictAll();
+  }
+
+  String get tLangAlt => _tLangAlt;
+  set tLangAlt(String value) {
+    if (_tLangAlt == value) return;
+    _tLangAlt = value;
+    _cache.evictAll();
+  }
+
+  int get tLangIdx => _tLangIdx;
+  set tLangidx(int value) {
+    if (value > 1 || value == _tLangIdx) {
+      return;
+    }
+    _tLangIdx = value;
     _cache.evictAll();
   }
 
@@ -57,7 +75,7 @@ class TranslateApi {
       [
         [text],
         sLang,
-        tLang,
+        (tLangIdx == 0) ? tLang : tLangAlt,
       ],
       "wt_lib",
     ];

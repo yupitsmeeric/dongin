@@ -30,7 +30,8 @@ class _SettingsState extends State<Settings> {
                 value: Text(api.sLang),
                 trailing: SizedBox(
                   width: 180,
-                  child: DropdownButton(
+                  child: DropdownButton<String>(
+                    value: api.sLang,
                     isExpanded: true,
                     items: [
                       for (var lang in languages)
@@ -50,7 +51,8 @@ class _SettingsState extends State<Settings> {
                 value: Text(api.tLang),
                 trailing: SizedBox(
                   width: 180,
-                  child: DropdownButton(
+                  child: DropdownButton<String>(
+                    value: api.tLang,
                     isExpanded: true,
                     items: [
                       for (var lang in languages)

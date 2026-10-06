@@ -4,7 +4,7 @@ import 'package:dongin/reader.dart';
 import 'package:dongin/settings.dart';
 import 'package:provider/provider.dart';
 
-// TODO: add a quick TL switch in the app bar
+// TODO: Refactor TranslateApi to be a changenotifier and make the toggle switch subscribe to it
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
@@ -24,10 +24,28 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // final _selected = [true, false];
+  late TranslateApi api;
+
   @override
   Widget build(BuildContext context) {
+    api = context.watch<TranslateApi>();
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Dongin Reader")),
+      appBar: AppBar(
+        title: const Text("Dongin Reader"),
+        actions: [
+          ToggleButtons(
+            isSelected: [for (int i = 0; i <= 1; i++) i == api.tLangIdx],
+            onPressed: (index) {
+              setState(() {
+                api.tLangidx = index;
+              });
+            },
+            children: [Text("en"), Text("ja")],
+          ),
+        ],
+      ),
       drawer: Drawer(
         child: ListView(
           children: [
@@ -42,9 +60,12 @@ class _MyAppState extends State<MyApp> {
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text("Settings"),
-              onTap: () => Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (context) => const Settings())),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const Settings()),
+                );
+              },
             ),
           ],
         ),

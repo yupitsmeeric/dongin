@@ -187,7 +187,7 @@ function onSelectionChange(){
     if (text) {
         console.log(text);
     }
-  }, 0)
+  }, 500)
 }
 
 var reader = document.getElementsByClassName('book-content');
