@@ -67,6 +67,28 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
+              SettingsTile(
+                leading: const Icon(Icons.text_rotation_down_sharp),
+                title: const Text("Alt Target Language"),
+                value: Text(api.tLangAlt),
+                trailing: SizedBox(
+                  width: 180,
+                  child: DropdownButton<String>(
+                    value: api.tLangAlt,
+                    isExpanded: true,
+                    items: [
+                      for (var lang in languages)
+                        DropdownMenuItem(value: lang, child: Text(lang)),
+                    ],
+                    onChanged: (tLangAlt) {
+                      if (tLangAlt == null) return;
+                      setState(() {
+                        api.tLangAlt = tLangAlt;
+                      });
+                    },
+                  ),
+                ),
+              ),
             ],
           ),
         ],

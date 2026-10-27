@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 // import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:lru_cache/lru_cache.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 // TODO: add sharedprefs
 
-class TranslateApi {
+class TranslateApi extends ChangeNotifier {
   late final SharedPreferences prefs;
   final http.Client _client;
   String _sLang = "ko";
@@ -30,6 +31,7 @@ class TranslateApi {
 
     _sLang = value;
     _cache.evictAll();
+    notifyListeners();
   }
 
   String get tLang => _tLang;
@@ -37,6 +39,7 @@ class TranslateApi {
     if (_tLang == value) return;
     _tLang = value;
     _cache.evictAll();
+    notifyListeners();
   }
 
   String get tLangAlt => _tLangAlt;
@@ -44,6 +47,7 @@ class TranslateApi {
     if (_tLangAlt == value) return;
     _tLangAlt = value;
     _cache.evictAll();
+    notifyListeners();
   }
 
   int get tLangIdx => _tLangIdx;
@@ -51,8 +55,8 @@ class TranslateApi {
     if (value > 1 || value == _tLangIdx) {
       return;
     }
-    _tLangIdx = value;
     _cache.evictAll();
+    _tLangIdx = value;
   }
 
   Future<String> translate(String text) async {

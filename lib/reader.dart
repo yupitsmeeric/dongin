@@ -169,7 +169,6 @@ function getTappedWord(e) {
 
   newRange.setStart(textNode, start);
   newRange.setEnd(textNode, end);
-  console.log(textNode.data.slice(start, end));
 
 
   const selection = window.getSelection();

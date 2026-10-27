@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    Provider<TranslateApi>(
+    ChangeNotifierProvider<TranslateApi>(
       create: (_) => TranslateApi(),
       builder: (context, child) =>
           MaterialApp(debugShowCheckedModeBanner: false, home: MyApp()),
@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
                 api.tLangidx = index;
               });
             },
-            children: [Text("en"), Text("ja")],
+            children: [Text(api.tLang), Text(api.tLangAlt)],
           ),
         ],
       ),
